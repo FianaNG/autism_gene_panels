@@ -1,0 +1,671 @@
+# Determining the Clinical Utility of Autism Gene Panels
+# Fiana Ni Ghralaigh
+# Date: 10th February 2021
+# RStudio Version 4.0.3
+# Tidyverse version 1.3.0
+
+## Load tidyverse package
+library(tidyverse)
+
+## Read in Supplemental Table 2: Gene lists of autism-relevant gene panels investigated. (n=18 gene panels)
+GenePanelList <- read_csv("NiGhralaigh_AutismGenePanel_Supplemental2.csv")
+GenePanelList <- as_tibble(GenePanelList)
+
+## Determine overlap with SFARI Gene (Table 1 Column 4)
+
+# Read in SFARI-Gene (01-13-2021release) (n=1000 genes)
+
+SFARI_Genelist <- read_csv("SFARI-Gene_genes_01-13-2021release_01-27-2021export_HGNCupdate20210210.csv")
+SFARI_Genelist <- as_tibble(SFARI_Genelist)
+
+# Filter each gene panel gene list for genes in SFARI Gene column 'Gene symbol' and restrict output dataframe to column of respective gene panel only
+
+AmbryGenetics_SFARI <- filter(GenePanelList, AmbryGenetics %in% (SFARI_Genelist$'gene-symbol'))
+AmbryGenetics_SFARI <- select(AmbryGenetics_SFARI, AmbryGenetics)
+
+AsperNeurogenetics_SFARI <- filter(GenePanelList, AsperNeurogenetics %in% (SFARI_Genelist$'gene-symbol'))
+AsperNeurogenetics_SFARI <- select(AsperNeurogenetics_SFARI, AsperNeurogenetics)
+
+Blueprintgenetics_SFARI <- filter(GenePanelList, Blueprintgenetics %in% (SFARI_Genelist$'gene-symbol'))
+Blueprintgenetics_SFARI <- select(Blueprintgenetics_SFARI, Blueprintgenetics)
+
+CenterForHumanGeneticsInc_SFARI <- filter(GenePanelList, CenterForHumanGeneticslnc %in% (SFARI_Genelist$'gene-symbol'))
+CenterForHumanGeneticsInc_SFARI <- select(CenterForHumanGeneticsInc_SFARI, CenterForHumanGeneticslnc)
+
+Centogene_SFARI <- filter(GenePanelList, Centogene %in% (SFARI_Genelist$'gene-symbol'))
+Centogene_SFARI <- select(Centogene_SFARI, Centogene)
+
+CentogeneID_SFARI <- filter(GenePanelList, CentogeneID %in% (SFARI_Genelist$'gene-symbol'))
+CentogeneID_SFARI <- select(CentogeneID_SFARI, CentogeneID)
+
+EGLGenetics_SFARI <- filter(GenePanelList, EGLGenetics %in% (SFARI_Genelist$'gene-symbol'))
+EGLGenetics_SFARI <- select(EGLGenetics_SFARI, EGLGenetics)
+
+FulgentGenetics_SFARI <- filter(GenePanelList, FulgentGenetics %in% (SFARI_Genelist$'gene-symbol'))
+FulgentGenetics_SFARI <- select(FulgentGenetics_SFARI, FulgentGenetics)
+
+GeneDx_SFARI <- filter(GenePanelList, GeneDx %in% (SFARI_Genelist$'gene-symbol'))
+GeneDx_SFARI <- select(GeneDx_SFARI, GeneDx)
+
+GENETAQ_SFARI <- filter(GenePanelList, GENETAQ %in% (SFARI_Genelist$'gene-symbol'))
+GENETAQ_SFARI <- select(GENETAQ_SFARI, GENETAQ)
+
+GenomicsEngland_SFARI <- filter(GenePanelList, GenomicsEngland %in% (SFARI_Genelist$'gene-symbol'))
+GenomicsEngland_SFARI <- select(GenomicsEngland_SFARI, GenomicsEngland)
+
+GreenwoodGeneticCentreDiagnosticLaboratories_SFARI <- filter(GenePanelList, GreenwoodGeneticCentreDiagnosticLaboratories %in% (SFARI_Genelist$'gene-symbol'))
+GreenwoodGeneticCentreDiagnosticLaboratories_SFARI <- select(GreenwoodGeneticCentreDiagnosticLaboratories_SFARI, GreenwoodGeneticCentreDiagnosticLaboratories)
+
+GxSciences_SFARI <- filter(GenePanelList, GxSciences %in% (SFARI_Genelist$'gene-symbol'))
+GxSciences_SFARI <- select(GxSciences_SFARI, GxSciences)
+
+MNGLaboratories_SFARI <- filter(GenePanelList, MNGLaboratories %in% (SFARI_Genelist$'gene-symbol'))
+MNGLaboratories_SFARI <- select(MNGLaboratories_SFARI, MNGLaboratories)
+
+MunroeMeyerInstitute_SFARI <- filter(GenePanelList, MunroeMeyerInstitute %in% (SFARI_Genelist$'gene-symbol'))
+MunroeMeyerInstitute_SFARI <- select(MunroeMeyerInstitute_SFARI, MunroeMeyerInstitute)
+
+PreventionGenetics_SFARI <- filter(GenePanelList, PreventionGenetics %in% (SFARI_Genelist$'gene-symbol'))
+PreventionGenetics_SFARI <- select(PreventionGenetics_SFARI, PreventionGenetics)
+
+ReferenceLaboratoryGenetics_SFARI <- filter(GenePanelList, ReferenceLaboratoryGenetics %in% (SFARI_Genelist$'gene-symbol'))
+ReferenceLaboratoryGenetics_SFARI <- select(ReferenceLaboratoryGenetics_SFARI, ReferenceLaboratoryGenetics)
+
+Sema4_SFARI <- filter(GenePanelList, Sema4 %in% (SFARI_Genelist$'gene-symbol'))
+Sema4_SFARI <- select(Sema4_SFARI, Sema4)
+
+# Read in Table 1 (for number of genes in each panel)
+Table1 <- read_csv("NiGhralaigh_AutismGenePanel_Table1.csv")
+Table1 <- as_tibble(Table1)
+
+
+# Calculate % overlap of each gene panel with SFARI Gene
+Table1[1,'Overlap with SFARI Gene'] <- nrow(AmbryGenetics_SFARI)/ Table1[1,'Number of genes targeted']*100 
+Table1[2,'Overlap with SFARI Gene'] <- nrow(AsperNeurogenetics_SFARI)/ Table1[2,'Number of genes targeted']*100
+Table1[3,'Overlap with SFARI Gene'] <- nrow(Blueprintgenetics_SFARI)/ Table1[3,'Number of genes targeted']*100 
+Table1[4,'Overlap with SFARI Gene'] <- nrow(CenterForHumanGeneticsInc_SFARI)/ Table1[4,'Number of genes targeted']*100 
+Table1[5,'Overlap with SFARI Gene'] <- nrow(Centogene_SFARI)/ Table1[5,'Number of genes targeted']*100 
+Table1[6,'Overlap with SFARI Gene'] <- nrow(CentogeneID_SFARI)/ Table1[6,'Number of genes targeted']*100 
+Table1[7,'Overlap with SFARI Gene'] <- nrow(EGLGenetics_SFARI)/ Table1[7,'Number of genes targeted']*100 
+Table1[8,'Overlap with SFARI Gene'] <- nrow(FulgentGenetics_SFARI)/ Table1[8,'Number of genes targeted']*100 
+Table1[9,'Overlap with SFARI Gene'] <- nrow(GeneDx_SFARI)/ Table1[9,'Number of genes targeted']*100 
+Table1[10,'Overlap with SFARI Gene'] <- nrow(GENETAQ_SFARI)/ Table1[10,'Number of genes targeted']*100 
+Table1[11,'Overlap with SFARI Gene'] <- nrow(GenomicsEngland_SFARI)/ Table1[11,'Number of genes targeted']*100
+Table1[12,'Overlap with SFARI Gene'] <- nrow(GreenwoodGeneticCentreDiagnosticLaboratories_SFARI)/ Table1[12,'Number of genes targeted']*100 
+Table1[13,'Overlap with SFARI Gene'] <- nrow(GxSciences_SFARI)/ Table1[13,'Number of genes targeted']*100 
+Table1[14,'Overlap with SFARI Gene'] <- nrow(MNGLaboratories_SFARI)/ Table1[14,'Number of genes targeted']*100 
+Table1[15,'Overlap with SFARI Gene'] <- nrow(MunroeMeyerInstitute_SFARI)/ Table1[15,'Number of genes targeted']*100 
+Table1[16,'Overlap with SFARI Gene'] <- nrow(PreventionGenetics_SFARI)/ Table1[16,'Number of genes targeted']*100 
+Table1[17,'Overlap with SFARI Gene'] <- nrow(ReferenceLaboratoryGenetics_SFARI)/ Table1[17,'Number of genes targeted']*100
+Table1[18,'Overlap with SFARI Gene'] <- nrow(Sema4_SFARI)/ Table1[18,'Number of genes targeted']*100 
+
+# Round % overlap to 2 decimal places
+Table1$'Overlap with SFARI Gene' <- round(Table1$'Overlap with SFARI Gene', digits=2)
+write.csv(Table1, "NiGhralaigh_AutismGenePanel_Table1_v2.csv", row.names = FALSE)
+
+## Identify individuals with detectable clinically relevant variants using each gene panel
+
+# Read in Feliciano et al Data Set 10 files (Sheets 1-4)
+# Note denovoCNV and inheritedCNV files require modification for these analyses. Here an additional column have been added names 'Genes'. This column contains genes are extracted from suppemental table 41525_2019_93_MOESM7_ESM column ‘Gene List’. This column contains names of all genes falling within CNV boundaries
+
+SPARK_denovoSNVIndel <- read_csv("41525_2019_93_MOESM12_ESM_Sheet3.csv")
+SPARK_denovoSNVIndel <- as_tibble(SPARK_denovoSNVIndel)
+SPARK_denovoSNVIndel <- rename(SPARK_denovoSNVIndel, SelfReport = 'Does the family self-report this genetic finding?')
+SPARK_denovoSNVIndel <- rename(SPARK_denovoSNVIndel, GeneticFindingHGNC = 'Genetic Finding (HGNC)')
+SPARK_denovoSNVIndel <- rename(SPARK_denovoSNVIndel, PathogenicProbable = 'Pathogenic or Probable?')
+SPARK_denovoSNVIndel <- filter(SPARK_denovoSNVIndel, SelfReport=='No')
+SPARK_denovoSNVIndel_Probable <- filter(SPARK_denovoSNVIndel, PathogenicProbable=='Probable')
+SPARK_denovoSNVIndel <- filter(SPARK_denovoSNVIndel, PathogenicProbable=='Pathogenic')
+
+SPARK_inheritedSNVIndel <- read_csv("41525_2019_93_MOESM12_ESM_Sheet4.csv")
+SPARK_inheritedSNVIndel <- as_tibble(SPARK_inheritedSNVIndel)
+SPARK_inheritedSNVIndel <- rename(SPARK_inheritedSNVIndel, SelfReport = 'Does the family self-report this genetic finding?')
+SPARK_inheritedSNVIndel <- rename(SPARK_inheritedSNVIndel, GeneticFindingHGNC = 'Genetic Finding (HGNC)')
+SPARK_inheritedSNVIndel <- rename(SPARK_inheritedSNVIndel, PathogenicProbable = 'Pathogenic or Probable?')
+SPARK_inheritedSNVIndel <- filter(SPARK_inheritedSNVIndel, SelfReport=='No')
+SPARK_inheritedSNVIndel_Probable <- filter(SPARK_inheritedSNVIndel, PathogenicProbable=='Probable')
+SPARK_inheritedSNVIndel <- filter(SPARK_inheritedSNVIndel, PathogenicProbable=='Pathogenic')
+
+
+SPARK_denovoCNV <- read_csv("41525_2019_93_MOESM12_ESM_Sheet1_Modified.csv")
+SPARK_denovoCNV <- as_tibble(SPARK_denovoCNV)
+SPARK_denovoCNV <- rename(SPARK_denovoCNV, SelfReport = 'Does the family self-report this genetic finding?')
+SPARK_denovoCNV <- rename(SPARK_denovoCNV, PathogenicProbable = 'Pathogenic or Probable?')
+SPARK_denovoCNV <- filter(SPARK_denovoCNV, SelfReport=='No')
+SPARK_denovoCNV_Probable <- filter(SPARK_denovoCNV, PathogenicProbable=='Probable')
+SPARK_denovoCNV <- filter(SPARK_denovoCNV, PathogenicProbable=='Pathogenic')
+
+SPARK_inheritedCNV <- read_csv("41525_2019_93_MOESM12_ESM_Sheet2_Modified.csv")
+SPARK_inheritedCNV <- as_tibble(SPARK_inheritedCNV)
+SPARK_inheritedCNV <- rename(SPARK_inheritedCNV, SelfReport = 'Does the family self-report this genetic finding?')
+SPARK_inheritedCNV <- rename(SPARK_inheritedCNV, PathogenicProbable = 'Pathogenic or Probable?')
+SPARK_inheritedCNV <- filter(SPARK_inheritedCNV, SelfReport=='No')
+SPARK_inheritedCNV_Probable <- filter(SPARK_inheritedCNV, PathogenicProbable=='Probable')
+SPARK_inheritedCNV <- filter(SPARK_inheritedCNV, PathogenicProbable=='Pathogenic')
+
+# Identify individuals carrying de novo SNV Indel identifiable by each panel
+
+AmbryGenetics_SPARK_denovoSNVIndel <- filter(SPARK_denovoSNVIndel, GeneticFindingHGNC %in% (GenePanelList$AmbryGenetics))
+
+AsperNeurogenetics_SPARK_denovoSNVIndel <- filter(SPARK_denovoSNVIndel, GeneticFindingHGNC %in% (GenePanelList$AsperNeurogenetics))
+
+Blueprintgenetics_SPARK_denovoSNVIndel <- filter(SPARK_denovoSNVIndel, GeneticFindingHGNC %in% (GenePanelList$Blueprintgenetics))
+
+CenterForHumanGeneticslnc_SPARK_denovoSNVIndel <- filter(SPARK_denovoSNVIndel, GeneticFindingHGNC %in% (GenePanelList$CenterForHumanGeneticslnc))
+
+Centogene_SPARK_denovoSNVIndel <- filter(SPARK_denovoSNVIndel, GeneticFindingHGNC %in% (GenePanelList$Centogene))
+
+CentogeneID_SPARK_denovoSNVIndel <- filter(SPARK_denovoSNVIndel, GeneticFindingHGNC %in% (GenePanelList$CentogeneID))
+
+EGLGenetics_SPARK_denovoSNVIndel <- filter(SPARK_denovoSNVIndel, GeneticFindingHGNC %in% (GenePanelList$EGLGenetics))
+
+FulgentGenetics_SPARK_denovoSNVIndel <- filter(SPARK_denovoSNVIndel, GeneticFindingHGNC %in% (GenePanelList$FulgentGenetics))
+
+GeneDx_SPARK_denovoSNVIndel <- filter(SPARK_denovoSNVIndel, GeneticFindingHGNC %in% (GenePanelList$GeneDx))
+
+GENETAQ_SPARK_denovoSNVIndel <- filter(SPARK_denovoSNVIndel, GeneticFindingHGNC %in% (GenePanelList$GENETAQ))
+
+GenomicsEngland_SPARK_denovoSNVIndel <- filter(SPARK_denovoSNVIndel, GeneticFindingHGNC %in% (GenePanelList$GenomicsEngland))
+
+GreenwoodGeneticCentreDiagnosticLaboratories_SPARK_denovoSNVIndel <- filter(SPARK_denovoSNVIndel, GeneticFindingHGNC %in% (GenePanelList$GreenwoodGeneticCentreDiagnosticLaboratories))
+
+GxSciences_SPARK_denovoSNVIndel <- filter(SPARK_denovoSNVIndel, GeneticFindingHGNC %in% (GenePanelList$GxSciences))
+
+MunroeMeyerInstitute_SPARK_denovoSNVIndel <- filter(SPARK_denovoSNVIndel, GeneticFindingHGNC %in% (GenePanelList$MunroeMeyerInstitute))
+
+PreventionGenetics_SPARK_denovoSNVIndel <- filter(SPARK_denovoSNVIndel, GeneticFindingHGNC %in% (GenePanelList$PreventionGenetics))
+
+ReferenceLaboratoryGenetics_SPARK_denovoSNVIndel <- filter(SPARK_denovoSNVIndel, GeneticFindingHGNC %in% (GenePanelList$ReferenceLaboratoryGenetics))
+
+Sema4_SPARK_denovoSNVIndel <- filter(SPARK_denovoSNVIndel, GeneticFindingHGNC %in% (GenePanelList$Sema4))
+
+MNGLaboratories_SPARK_denovoSNVIndel <- filter(SPARK_denovoSNVIndel, GeneticFindingHGNC %in% (GenePanelList$MNGLaboratories))
+
+# Identify individuals carrying inherited SNV Indel identifiable by each panel
+
+AmbryGenetics_SPARK_inheritedSNVIndel <- filter(SPARK_inheritedSNVIndel, GeneticFindingHGNC %in% (GenePanelList$AmbryGenetics))
+
+AsperNeurogenetics_SPARK_inheritedSNVIndel <- filter(SPARK_inheritedSNVIndel, GeneticFindingHGNC %in% (GenePanelList$AsperNeurogenetics))
+
+Blueprintgenetics_SPARK_inheritedSNVIndel <- filter(SPARK_inheritedSNVIndel, GeneticFindingHGNC %in% (GenePanelList$Blueprintgenetics))
+
+CenterForHumanGeneticslnc_SPARK_inheritedSNVIndel <- filter(SPARK_inheritedSNVIndel, GeneticFindingHGNC %in% (GenePanelList$CenterForHumanGeneticslnc))
+
+Centogene_SPARK_SPARK_inheritedSNVIndel <- filter(SPARK_inheritedSNVIndel, GeneticFindingHGNC %in% (GenePanelList$Centogene))
+
+CentogeneID_SPARK_inheritedSNVIndel <- filter(SPARK_inheritedSNVIndel, GeneticFindingHGNC %in% (GenePanelList$CentogeneID))
+
+EGLGenetics_SPARK_inheritedSNVIndel <- filter(SPARK_inheritedSNVIndel, GeneticFindingHGNC %in% (GenePanelList$EGLGenetics))
+
+FulgentGenetics_SPARK_inheritedSNVIndel <- filter(SPARK_inheritedSNVIndel, GeneticFindingHGNC %in% (GenePanelList$FulgentGenetics))
+
+GeneDx_SPARK_inheritedSNVIndel <- filter(SPARK_inheritedSNVIndel, GeneticFindingHGNC %in% (GenePanelList$GeneDx))
+
+GENETAQ_SPARK_inheritedSNVIndel <- filter(SPARK_inheritedSNVIndel, GeneticFindingHGNC %in% (GenePanelList$GENETAQ))
+
+GenomicsEngland_inheritedSNVIndel <- filter(SPARK_inheritedSNVIndel, GeneticFindingHGNC %in% (GenePanelList$GenomicsEngland))
+
+GreenwoodGeneticCentreDiagnosticLaboratories_SPARK_inheritedSNVIndel <- filter(SPARK_inheritedSNVIndel, GeneticFindingHGNC %in% (GenePanelList$GreenwoodGeneticCentreDiagnosticLaboratories))
+
+GxSciences_SPARK_SPARK_inheritedSNVIndel <- filter(SPARK_inheritedSNVIndel, GeneticFindingHGNC %in% (GenePanelList$GxSciences))
+
+MunroeMeyerInstitute_SPARK_inheritedSNVIndel <- filter(SPARK_inheritedSNVIndel, GeneticFindingHGNC %in% (GenePanelList$MunroeMeyerInstitute))
+
+PreventionGenetics_SPARK_inheritedSNVIndel <- filter(SPARK_inheritedSNVIndel, GeneticFindingHGNC %in% (GenePanelList$PreventionGenetics))
+
+ReferenceLaboratoryGenetics_SPARK_inheritedSNVIndel <- filter(SPARK_inheritedSNVIndel, GeneticFindingHGNC %in% (GenePanelList$ReferenceLaboratoryGenetics))
+
+Sema4_SPARK_inheritedSNVIndel <- filter(SPARK_inheritedSNVIndel, GeneticFindingHGNC %in% (GenePanelList$Sema4))
+
+MNGLaboratories_SPARK_inheritedSNVIndel <- filter(SPARK_inheritedSNVIndel, GeneticFindingHGNC %in% (GenePanelList$MNGLaboratories))
+
+# Identify individuals carrying de novo CNV identifiable by each panel
+
+AmbryGenetics_SPARK_denovoCNV <- filter(SPARK_denovoCNV, Genes %in% (GenePanelList$AmbryGenetics))
+
+AsperNeurogenetics_SPARK_denovoCNV <- filter(SPARK_denovoCNV, Genes %in% (GenePanelList$AsperNeurogenetics))
+
+Blueprintgenetics_SPARK_denovoCNV <- filter(SPARK_denovoCNV, Genes %in% (GenePanelList$Blueprintgenetics))
+
+CenterForHumanGeneticslnc_SPARK_denovoCNV <- filter(SPARK_denovoCNV, Genes %in% (GenePanelList$CenterForHumanGeneticslnc))
+
+Centogene_SPARK_denovoCNV <- filter(SPARK_denovoCNV, Genes %in% (GenePanelList$Centogene))
+
+CentogeneID_SPARK_denovoCNV <- filter(SPARK_denovoCNV, Genes %in% (GenePanelList$CentogeneID))
+
+EGLGenetics_SPARK_denovoCNV <- filter(SPARK_denovoCNV, Genes %in% (GenePanelList$EGLGenetics))
+
+FulgentGenetics_SPARK_denovoCNV <- filter(SPARK_denovoCNV, Genes %in% (GenePanelList$FulgentGenetics))
+
+GeneDx_SPARK_denovoCNV <- filter(SPARK_denovoCNV, Genes %in% (GenePanelList$GeneDx))
+
+GENETAQ_SPARK_denovoCNV <- filter(SPARK_denovoCNV, Genes %in% (GenePanelList$GENETAQ))
+
+GenomicsEngland_SPARK_denovoCNV <- filter(SPARK_denovoCNV, Genes %in% (GenePanelList$GenomicsEngland))
+
+GreenwoodGeneticCentreDiagnosticLaboratories_SPARK_denovoCNV <- filter(SPARK_denovoCNV, Genes %in% (GenePanelList$GreenwoodGeneticCentreDiagnosticLaboratories))
+
+GxSciences_SPARK_denovoCNV <- filter(SPARK_denovoCNV, Genes %in% (GenePanelList$GxSciences))
+
+MunroeMeyerInstitute_SPARK_denovoCNV <- filter(SPARK_denovoCNV, Genes %in% (GenePanelList$MunroeMeyerInstitute))
+
+PreventionGenetics_SPARK_denovoCNV <- filter(SPARK_denovoCNV, Genes %in% (GenePanelList$PreventionGenetics))
+
+ReferenceLaboratoryGenetics_SPARK_denovoCNV <- filter(SPARK_denovoCNV, Genes %in% (GenePanelList$ReferenceLaboratoryGenetics))
+
+Sema4_SPARK_denovoCNV <- filter(SPARK_denovoCNV, Genes %in% (GenePanelList$Sema4))
+
+MNGLaboratories_SPARK_denovoCNV <- filter(SPARK_denovoCNV, Genes %in% (GenePanelList$MNGLaboratories))
+
+# Identify individuals carrying inherited CNV identifiable by each panel
+
+AmbryGenetics_SPARK_inheritedCNV <- filter(SPARK_inheritedCNV, Genes %in% (GenePanelList$AmbryGenetics))
+
+AsperNeurogenetics_SPARK_inheritedCNV <- filter(SPARK_inheritedCNV, Genes %in% (GenePanelList$AsperNeurogenetics))
+
+Blueprintgenetics_SPARK_inheritedCNV <- filter(SPARK_inheritedCNV, Genes %in% (GenePanelList$Blueprintgenetics))
+
+CenterForHumanGeneticslnc_SPARK_inheritedCNV <- filter(SPARK_inheritedCNV, Genes %in% (GenePanelList$CenterForHumanGeneticslnc))
+
+Centogene_SPARK_inheritedCNV <- filter(SPARK_inheritedCNV, Genes %in% (GenePanelList$Centogene))
+
+CentogeneID_SPARK_inheritedCNV <- filter(SPARK_inheritedCNV, Genes %in% (GenePanelList$CentogeneID))
+
+EGLGenetics_SPARK_inheritedCNV <- filter(SPARK_inheritedCNV, Genes %in% (GenePanelList$EGLGenetics))
+
+FulgentGenetics_SPARK_inheritedCNV <- filter(SPARK_inheritedCNV, Genes %in% (GenePanelList$FulgentGenetics))
+
+GeneDx_SPARK_inheritedCNV <- filter(SPARK_inheritedCNV, Genes %in% (GenePanelList$GeneDx))
+
+GENETAQ_SPARK_inheritedCNV <- filter(SPARK_inheritedCNV, Genes %in% (GenePanelList$GENETAQ))
+
+GenomicsEngland_SPARK_inheritedCNV <- filter(SPARK_inheritedCNV, Genes %in% (GenePanelList$GenomicsEngland))
+
+GreenwoodGeneticCentreDiagnosticLaboratories_SPARK_inheritedCNV <- filter(SPARK_inheritedCNV, Genes %in% (GenePanelList$GreenwoodGeneticCentreDiagnosticLaboratories))
+
+GxSciences_SPARK_inheritedCNV <- filter(SPARK_inheritedCNV, Genes %in% (GenePanelList$GxSciences))
+
+MunroeMeyerInstitute_SPARK_inheritedCNV <- filter(SPARK_inheritedCNV, Genes %in% (GenePanelList$MunroeMeyerInstitute))
+
+PreventionGenetics_SPARK_inheritedCNV <- filter(SPARK_inheritedCNV, Genes %in% (GenePanelList$PreventionGenetics))
+
+ReferenceLaboratoryGenetics_SPARK_inheritedCNV <- filter(SPARK_inheritedCNV, Genes %in% (GenePanelList$ReferenceLaboratoryGenetics))
+
+Sema4_SPARK_inheritedCNV <- filter(SPARK_inheritedCNV, Genes %in% (GenePanelList$Sema4))
+
+MNGLaboratories_SPARK_inheritedCNV <- filter(SPARK_inheritedCNV, Genes %in% (GenePanelList$MNGLaboratories))
+
+## Merge each variant type and account for individuals with >1 variant
+
+AmbryGenetics_SPARK_AllSNV <- full_join(AmbryGenetics_SPARK_denovoSNVIndel, AmbryGenetics_SPARK_inheritedSNVIndel, by=c("SPID"))
+AmbryGenetics_SPARK_AllCNV <- full_join(AmbryGenetics_SPARK_denovoCNV, AmbryGenetics_SPARK_inheritedCNV, by=c("SPID"))
+AmbryGenetics_SPARK_All <- full_join(AmbryGenetics_SPARK_AllSNV, AmbryGenetics_SPARK_AllCNV, by=c("SPID"))
+AmbryGenetics_SPARK_IndividualCount <- distinct(AmbryGenetics_SPARK_All, SPID, .keep_all = TRUE)
+nrow(AmbryGenetics_SPARK_IndividualCount)/ 459*100 
+
+AsperNeurogenetics_SPARK_AllSNV <- full_join(AsperNeurogenetics_SPARK_denovoSNVIndel, AsperNeurogenetics_SPARK_inheritedSNVIndel, by=c("SPID"))
+AsperNeurogenetics_SPARK_AllCNV <- full_join(AsperNeurogenetics_SPARK_denovoCNV, AsperNeurogenetics_SPARK_inheritedCNV, by=c("SPID"))
+AsperNeurogenetics_SPARK_All <- full_join(AsperNeurogenetics_SPARK_AllSNV, AsperNeurogenetics_SPARK_AllCNV, by=c("SPID"))
+AsperNeurogenetics_SPARK_IndividualCount <- distinct(AsperNeurogenetics_SPARK_All, SPID, .keep_all = TRUE)
+nrow(AsperNeurogenetics_SPARK_IndividualCount)/ 459*100
+
+Blueprintgenetics_SPARK_AllSNV <- full_join(Blueprintgenetics_SPARK_denovoSNVIndel, Blueprintgenetics_SPARK_inheritedSNVIndel, by=c("SPID"))
+Blueprintgenetics_SPARK_AllCNV <- full_join(Blueprintgenetics_SPARK_denovoCNV, Blueprintgenetics_SPARK_inheritedCNV, by=c("SPID"))
+Blueprintgenetics_SPARK_All <- full_join(Blueprintgenetics_SPARK_AllSNV, Blueprintgenetics_SPARK_AllCNV, by=c("SPID"))
+Blueprintgenetics_SPARK_IndividualCount <- distinct(Blueprintgenetics_SPARK_All, SPID, .keep_all = TRUE)
+nrow(Blueprintgenetics_SPARK_IndividualCount)/ 459*100
+
+CenterForHumanGeneticslnc_SPARK_AllSNV <- full_join(CenterForHumanGeneticslnc_SPARK_denovoSNVIndel, CenterForHumanGeneticslnc_SPARK_inheritedSNVIndel, by=c("SPID"))
+CenterForHumanGeneticslnc_SPARK_AllCNV <- full_join(CenterForHumanGeneticslnc_SPARK_denovoCNV, CenterForHumanGeneticslnc_SPARK_inheritedCNV, by=c("SPID"))
+CenterForHumanGeneticslnc_SPARK_All <- full_join(CenterForHumanGeneticslnc_SPARK_AllSNV, CenterForHumanGeneticslnc_SPARK_AllCNV, by=c("SPID"))
+CenterForHumanGeneticslnc_SPARK_IndividualCount <- distinct(CenterForHumanGeneticslnc_SPARK_All, SPID, .keep_all = TRUE)
+nrow(CenterForHumanGeneticslnc_SPARK_IndividualCount)/ 459*100
+
+Centogene_SPARK_AllSNV <- full_join(Centogene_SPARK_denovoSNVIndel, Centogene_SPARK_SPARK_inheritedSNVIndel, by=c("SPID"))
+Centogene_SPARK_AllCNV <- full_join(Centogene_SPARK_denovoCNV, Centogene_SPARK_inheritedCNV, by=c("SPID"))
+Centogene_SPARK_All <- full_join(Centogene_SPARK_AllSNV, Centogene_SPARK_AllCNV, by=c("SPID"))
+Centogene_SPARK_IndividualCount <- distinct(Centogene_SPARK_All, SPID, .keep_all = TRUE)
+nrow(Centogene_SPARK_IndividualCount)/ 459*100
+
+CentogeneID_SPARK_AllSNV <- full_join(CentogeneID_SPARK_denovoSNVIndel, CentogeneID_SPARK_inheritedSNVIndel, by=c("SPID"))
+CentogeneID_SPARK_AllCNV <- full_join(CentogeneID_SPARK_denovoCNV, CentogeneID_SPARK_inheritedCNV, by=c("SPID"))
+CentogeneID_SPARK_All <- full_join(CentogeneID_SPARK_AllSNV, CentogeneID_SPARK_AllCNV, by=c("SPID"))
+CentogeneID_SPARK_IndividualCount <- distinct(CentogeneID_SPARK_All, SPID, .keep_all = TRUE)
+nrow(CentogeneID_SPARK_IndividualCount)/ 459*100
+
+EGLGenetics_SPARK_AllSNV <- full_join(EGLGenetics_SPARK_denovoSNVIndel, EGLGenetics_SPARK_inheritedSNVIndel, by=c("SPID"))
+EGLGenetics_SPARK_AllCNV <- full_join(EGLGenetics_SPARK_denovoCNV, EGLGenetics_SPARK_inheritedCNV, by=c("SPID"))
+EGLGenetics_SPARK_All <- full_join(EGLGenetics_SPARK_AllSNV, EGLGenetics_SPARK_AllCNV, by=c("SPID"))
+EGLGenetics_SPARK_IndividualCount <- distinct(EGLGenetics_SPARK_All, SPID, .keep_all = TRUE)
+nrow(EGLGenetics_SPARK_IndividualCount)/ 459*100
+
+FulgentGenetics_SPARK_AllSNV <- full_join(FulgentGenetics_SPARK_denovoSNVIndel, FulgentGenetics_SPARK_inheritedSNVIndel, by=c("SPID"))
+FulgentGenetics_SPARK_AllCNV <- full_join(FulgentGenetics_SPARK_denovoCNV, FulgentGenetics_SPARK_inheritedCNV, by=c("SPID"))
+FulgentGenetics_SPARK_All <- full_join(FulgentGenetics_SPARK_AllSNV, FulgentGenetics_SPARK_AllCNV, by=c("SPID"))
+FulgentGenetics_SPARK_IndividualCount <- distinct(FulgentGenetics_SPARK_All, SPID, .keep_all = TRUE)
+nrow(FulgentGenetics_SPARK_IndividualCount)/ 459*100
+
+GeneDx_SPARK_AllSNV <- full_join(GeneDx_SPARK_denovoSNVIndel, GeneDx_SPARK_inheritedSNVIndel, by=c("SPID"))
+GeneDx_SPARK_AllCNV <- full_join(GeneDx_SPARK_denovoCNV, GeneDx_SPARK_inheritedCNV, by=c("SPID"))
+GeneDx_SPARK_All <- full_join(GeneDx_SPARK_AllSNV, GeneDx_SPARK_AllCNV, by=c("SPID"))
+GeneDx_SPARK_IndividualCount <- distinct(GeneDx_SPARK_All, SPID, .keep_all = TRUE)
+nrow(GeneDx_SPARK_IndividualCount)/ 459*100
+
+GENETAQ_SPARK_AllSNV <- full_join(GENETAQ_SPARK_denovoSNVIndel, GENETAQ_SPARK_inheritedSNVIndel, by=c("SPID"))
+GENETAQ_SPARK_AllCNV <- full_join(GENETAQ_SPARK_denovoCNV, GENETAQ_SPARK_inheritedCNV, by=c("SPID"))
+GENETAQ_SPARK_All <- full_join(GENETAQ_SPARK_AllSNV, GENETAQ_SPARK_AllCNV, by=c("SPID"))
+GENETAQ_SPARK_IndividualCount <- distinct(GENETAQ_SPARK_All, SPID, .keep_all = TRUE)
+nrow(GENETAQ_SPARK_IndividualCount)/ 459*100
+
+GenomicsEngland_SPARK_AllSNV <- full_join(GenomicsEngland_SPARK_denovoSNVIndel, GenomicsEngland_inheritedSNVIndel, by=c("SPID"))
+GenomicsEngland_SPARK_AllCNV <- full_join(GenomicsEngland_SPARK_denovoCNV, GenomicsEngland_SPARK_inheritedCNV, by=c("SPID"))
+GenomicsEngland_SPARK_All <- full_join(GenomicsEngland_SPARK_AllSNV, GenomicsEngland_SPARK_AllCNV, by=c("SPID"))
+GenomicsEngland_SPARK_IndividualCount <- distinct(GenomicsEngland_SPARK_All, SPID, .keep_all = TRUE)
+nrow(GenomicsEngland_SPARK_IndividualCount)/ 459*100
+
+GreenwoodGeneticCentreDiagnosticLaboratories_SPARK_AllSNV <- full_join(GreenwoodGeneticCentreDiagnosticLaboratories_SPARK_denovoSNVIndel, GreenwoodGeneticCentreDiagnosticLaboratories_SPARK_inheritedSNVIndel, by=c("SPID"))
+GreenwoodGeneticCentreDiagnosticLaboratories_SPARK_AllCNV <- full_join(GreenwoodGeneticCentreDiagnosticLaboratories_SPARK_denovoCNV, GreenwoodGeneticCentreDiagnosticLaboratories_SPARK_inheritedCNV, by=c("SPID"))
+GreenwoodGeneticCentreDiagnosticLaboratories_SPARK_All <- full_join(GreenwoodGeneticCentreDiagnosticLaboratories_SPARK_AllSNV, GreenwoodGeneticCentreDiagnosticLaboratories_SPARK_AllCNV, by=c("SPID"))
+GreenwoodGeneticCentreDiagnosticLaboratories_SPARK_IndividualCount <- distinct(GreenwoodGeneticCentreDiagnosticLaboratories_SPARK_All, SPID, .keep_all = TRUE)
+nrow(GreenwoodGeneticCentreDiagnosticLaboratories_SPARK_IndividualCount)/ 459*100
+
+GxSciences_SPARK_AllSNV <- full_join(GxSciences_SPARK_denovoSNVIndel, GxSciences_SPARK_SPARK_inheritedSNVIndel, by=c("SPID"))
+GxSciences_SPARK_AllCNV <- full_join(GxSciences_SPARK_denovoCNV, GxSciences_SPARK_inheritedCNV, by=c("SPID"))
+GxSciences_SPARK_All <- full_join(GxSciences_SPARK_AllSNV, GxSciences_SPARK_AllCNV, by=c("SPID"))
+GxSciences_SPARK_IndividualCount <- distinct(GxSciences_SPARK_All, SPID, .keep_all = TRUE)
+nrow(GxSciences_SPARK_IndividualCount)/ 459*100
+
+MunroeMeyerInstitute_SPARK_AllSNV <- full_join(MunroeMeyerInstitute_SPARK_denovoSNVIndel, MunroeMeyerInstitute_SPARK_inheritedSNVIndel, by=c("SPID"))
+MunroeMeyerInstitute_SPARK_AllCNV <- full_join(MunroeMeyerInstitute_SPARK_denovoCNV, MunroeMeyerInstitute_SPARK_inheritedCNV, by=c("SPID"))
+MunroeMeyerInstitute_SPARK_All <- full_join(MunroeMeyerInstitute_SPARK_AllSNV, MunroeMeyerInstitute_SPARK_AllCNV, by=c("SPID"))
+MunroeMeyerInstitute_SPARK_IndividualCount <- distinct(MunroeMeyerInstitute_SPARK_All, SPID, .keep_all = TRUE)
+nrow(MunroeMeyerInstitute_SPARK_IndividualCount)/ 459*100
+
+PreventionGenetics_SPARK_AllSNV <- full_join(PreventionGenetics_SPARK_denovoSNVIndel, PreventionGenetics_SPARK_inheritedSNVIndel, by=c("SPID"))
+PreventionGenetics_SPARK_AllCNV <- full_join(PreventionGenetics_SPARK_denovoCNV, PreventionGenetics_SPARK_inheritedCNV, by=c("SPID"))
+PreventionGenetics_SPARK_All <- full_join(PreventionGenetics_SPARK_AllSNV, PreventionGenetics_SPARK_AllCNV, by=c("SPID"))
+PreventionGenetics_SPARK_IndividualCount <- distinct(PreventionGenetics_SPARK_All, SPID, .keep_all = TRUE)
+nrow(PreventionGenetics_SPARK_IndividualCount)/ 459*100
+
+ReferenceLaboratoryGenetics_SPARK_AllSNV <- full_join(ReferenceLaboratoryGenetics_SPARK_denovoSNVIndel, ReferenceLaboratoryGenetics_SPARK_inheritedSNVIndel, by=c("SPID"))
+ReferenceLaboratoryGenetics_SPARK_AllCNV <- full_join(ReferenceLaboratoryGenetics_SPARK_denovoCNV, ReferenceLaboratoryGenetics_SPARK_inheritedCNV, by=c("SPID"))
+ReferenceLaboratoryGenetics_SPARK_All <- full_join(ReferenceLaboratoryGenetics_SPARK_AllSNV, ReferenceLaboratoryGenetics_SPARK_AllCNV, by=c("SPID"))
+ReferenceLaboratoryGenetics_SPARK_IndividualCount <- distinct(ReferenceLaboratoryGenetics_SPARK_All, SPID, .keep_all = TRUE)
+nrow(ReferenceLaboratoryGenetics_SPARK_IndividualCount)/ 459*100
+
+Sema4_SPARK_AllSNV <- full_join(Sema4_SPARK_denovoSNVIndel, Sema4_SPARK_inheritedSNVIndel, by=c("SPID"))
+Sema4_SPARK_AllCNV <- full_join(Sema4_SPARK_denovoCNV, Sema4_SPARK_inheritedCNV, by=c("SPID"))
+Sema4_SPARK_All <- full_join(Sema4_SPARK_AllSNV, Sema4_SPARK_AllCNV, by=c("SPID"))
+Sema4_SPARK_IndividualCount <- distinct(Sema4_SPARK_All, SPID, .keep_all = TRUE)
+nrow(Sema4_SPARK_IndividualCount)/ 459*100
+
+MNGLaboratories_SPARK_AllSNV <- full_join(MNGLaboratories_SPARK_denovoSNVIndel, MNGLaboratories_SPARK_inheritedSNVIndel, by=c("SPID"))
+MNGLaboratories_SPARK_AllCNV <- full_join(MNGLaboratories_SPARK_denovoCNV, MNGLaboratories_SPARK_inheritedCNV, by=c("SPID"))
+MNGLaboratories_SPARK_All <- full_join(MNGLaboratories_SPARK_AllSNV, MNGLaboratories_SPARK_AllCNV, by=c("SPID"))
+MNGLaboratories_SPARK_IndividualCount <- distinct(MNGLaboratories_SPARK_All, SPID, .keep_all = TRUE)
+nrow(MNGLaboratories_SPARK_IndividualCount)/ 459*100
+
+
+## Diagnostic yield of probable variants
+
+# Identify individuals carrying de novo SNV Indel identifiable by each panel
+
+AmbryGenetics_SPARK_denovoSNVIndel_Probable <- filter(SPARK_denovoSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$AmbryGenetics))
+
+AsperNeurogenetics_SPARK_denovoSNVIndel_Probable <- filter(SPARK_denovoSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$AsperNeurogenetics))
+
+Blueprintgenetics_SPARK_denovoSNVIndel_Probable <- filter(SPARK_denovoSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$Blueprintgenetics))
+
+CenterForHumanGeneticslnc_SPARK_denovoSNVIndel_Probable <- filter(SPARK_denovoSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$CenterForHumanGeneticslnc))
+
+Centogene_SPARK_denovoSNVIndel_Probable <- filter(SPARK_denovoSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$Centogene))
+
+CentogeneID_SPARK_denovoSNVIndel_Probable <- filter(SPARK_denovoSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$CentogeneID))
+
+EGLGenetics_SPARK_denovoSNVIndel_Probable <- filter(SPARK_denovoSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$EGLGenetics))
+
+FulgentGenetics_SPARK_denovoSNVIndel_Probable <- filter(SPARK_denovoSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$FulgentGenetics))
+
+GeneDx_SPARK_denovoSNVIndel_Probable <- filter(SPARK_denovoSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$GeneDx))
+
+GENETAQ_SPARK_denovoSNVIndel_Probable <- filter(SPARK_denovoSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$GENETAQ))
+
+GenomicsEngland_SPARK_denovoSNVIndel_Probable <- filter(SPARK_denovoSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$GenomicsEngland))
+
+GreenwoodGeneticCentreDiagnosticLaboratories_SPARK_denovoSNVIndel_Probable <- filter(SPARK_denovoSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$GreenwoodGeneticCentreDiagnosticLaboratories))
+
+GxSciences_SPARK_denovoSNVIndel_Probable <- filter(SPARK_denovoSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$GxSciences))
+
+MunroeMeyerInstitute_SPARK_denovoSNVIndel_Probable <- filter(SPARK_denovoSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$MunroeMeyerInstitute))
+
+PreventionGenetics_SPARK_denovoSNVIndel_Probable <- filter(SPARK_denovoSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$PreventionGenetics))
+
+ReferenceLaboratoryGenetics_SPARK_denovoSNVIndel_Probable <- filter(SPARK_denovoSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$ReferenceLaboratoryGenetics))
+
+Sema4_SPARK_denovoSNVIndel_Probable <- filter(SPARK_denovoSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$Sema4))
+
+MNGLaboratories_SPARK_denovoSNVIndel_Probable <- filter(SPARK_denovoSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$MNGLaboratories))
+
+# Identify individuals carrying inherited SNV Indel identifiable by each panel
+
+AmbryGenetics_SPARK_inheritedSNVIndel_Probable <- filter(SPARK_inheritedSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$AmbryGenetics))
+
+AsperNeurogenetics_SPARK_inheritedSNVIndel_Probable <- filter(SPARK_inheritedSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$AsperNeurogenetics))
+
+Blueprintgenetics_SPARK_inheritedSNVIndel_Probable <- filter(SPARK_inheritedSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$Blueprintgenetics))
+
+CenterForHumanGeneticslnc_SPARK_inheritedSNVIndel_Probable <- filter(SPARK_inheritedSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$CenterForHumanGeneticslnc))
+
+Centogene_SPARK_SPARK_inheritedSNVIndel_Probable <- filter(SPARK_inheritedSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$Centogene))
+
+CentogeneID_SPARK_inheritedSNVIndel_Probable <- filter(SPARK_inheritedSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$CentogeneID))
+
+EGLGenetics_SPARK_inheritedSNVIndel_Probable <- filter(SPARK_inheritedSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$EGLGenetics))
+
+FulgentGenetics_SPARK_inheritedSNVIndel_Probable <- filter(SPARK_inheritedSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$FulgentGenetics))
+
+GeneDx_SPARK_inheritedSNVIndel_Probable <- filter(SPARK_inheritedSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$GeneDx))
+
+GENETAQ_SPARK_inheritedSNVIndel_Probable <- filter(SPARK_inheritedSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$GENETAQ))
+
+GenomicsEngland_inheritedSNVIndel_Probable <- filter(SPARK_inheritedSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$GenomicsEngland))
+
+GreenwoodGeneticCentreDiagnosticLaboratories_SPARK_inheritedSNVIndel_Probable <- filter(SPARK_inheritedSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$GreenwoodGeneticCentreDiagnosticLaboratories))
+
+GxSciences_SPARK_SPARK_inheritedSNVIndel_Probable <- filter(SPARK_inheritedSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$GxSciences))
+
+MunroeMeyerInstitute_SPARK_inheritedSNVIndel_Probable <- filter(SPARK_inheritedSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$MunroeMeyerInstitute))
+
+PreventionGenetics_SPARK_inheritedSNVIndel_Probable <- filter(SPARK_inheritedSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$PreventionGenetics))
+
+ReferenceLaboratoryGenetics_SPARK_inheritedSNVIndel_Probable <- filter(SPARK_inheritedSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$ReferenceLaboratoryGenetics))
+
+Sema4_SPARK_inheritedSNVIndel_Probable <- filter(SPARK_inheritedSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$Sema4))
+
+MNGLaboratories_SPARK_inheritedSNVIndel_Probable <- filter(SPARK_inheritedSNVIndel_Probable, GeneticFindingHGNC %in% (GenePanelList$MNGLaboratories))
+
+# Identify individuals carrying de novo CNV identifiable by each panel
+
+AmbryGenetics_SPARK_denovoCNV_Probable <- filter(SPARK_denovoCNV_Probable, Genes %in% (GenePanelList$AmbryGenetics))
+
+AsperNeurogenetics_SPARK_denovoCNV_Probable <- filter(SPARK_denovoCNV_Probable, Genes %in% (GenePanelList$AsperNeurogenetics))
+
+Blueprintgenetics_SPARK_denovoCNV_Probable <- filter(SPARK_denovoCNV_Probable, Genes %in% (GenePanelList$Blueprintgenetics))
+
+CenterForHumanGeneticslnc_SPARK_denovoCNV_Probable <- filter(SPARK_denovoCNV_Probable, Genes %in% (GenePanelList$CenterForHumanGeneticslnc))
+
+Centogene_SPARK_denovoCNV_Probable <- filter(SPARK_denovoCNV_Probable, Genes %in% (GenePanelList$Centogene))
+
+CentogeneID_SPARK_denovoCNV_Probable <- filter(SPARK_denovoCNV_Probable, Genes %in% (GenePanelList$CentogeneID))
+
+EGLGenetics_SPARK_denovoCNV_Probable <- filter(SPARK_denovoCNV_Probable, Genes %in% (GenePanelList$EGLGenetics))
+
+FulgentGenetics_SPARK_denovoCNV_Probable <- filter(SPARK_denovoCNV_Probable, Genes %in% (GenePanelList$FulgentGenetics))
+
+GeneDx_SPARK_denovoCNV_Probable <- filter(SPARK_denovoCNV_Probable, Genes %in% (GenePanelList$GeneDx))
+
+GENETAQ_SPARK_denovoCNV_Probable <- filter(SPARK_denovoCNV_Probable, Genes %in% (GenePanelList$GENETAQ))
+
+GenomicsEngland_SPARK_denovoCNV_Probable <- filter(SPARK_denovoCNV_Probable, Genes %in% (GenePanelList$GenomicsEngland))
+
+GreenwoodGeneticCentreDiagnosticLaboratories_SPARK_denovoCNV_Probable <- filter(SPARK_denovoCNV_Probable, Genes %in% (GenePanelList$GreenwoodGeneticCentreDiagnosticLaboratories))
+
+GxSciences_SPARK_denovoCNV_Probable <- filter(SPARK_denovoCNV_Probable, Genes %in% (GenePanelList$GxSciences))
+
+MunroeMeyerInstitute_SPARK_denovoCNV_Probable <- filter(SPARK_denovoCNV_Probable, Genes %in% (GenePanelList$MunroeMeyerInstitute))
+
+PreventionGenetics_SPARK_denovoCNV_Probable <- filter(SPARK_denovoCNV_Probable, Genes %in% (GenePanelList$PreventionGenetics))
+
+ReferenceLaboratoryGenetics_SPARK_denovoCNV_Probable <- filter(SPARK_denovoCNV_Probable, Genes %in% (GenePanelList$ReferenceLaboratoryGenetics))
+
+Sema4_SPARK_denovoCNV_Probable <- filter(SPARK_denovoCNV_Probable, Genes %in% (GenePanelList$Sema4))
+
+MNGLaboratories_SPARK_denovoCNV_Probable <- filter(SPARK_denovoCNV_Probable, Genes %in% (GenePanelList$MNGLaboratories))
+
+# Identify individuals carrying inherited CNV identifiable by each panel
+
+AmbryGenetics_SPARK_inheritedCNV_Probable <- filter(SPARK_inheritedCNV_Probable, Genes %in% (GenePanelList$AmbryGenetics))
+
+AsperNeurogenetics_SPARK_inheritedCNV_Probable <- filter(SPARK_inheritedCNV_Probable, Genes %in% (GenePanelList$AsperNeurogenetics))
+
+Blueprintgenetics_SPARK_inheritedCNV_Probable <- filter(SPARK_inheritedCNV_Probable, Genes %in% (GenePanelList$Blueprintgenetics))
+
+CenterForHumanGeneticslnc_SPARK_inheritedCNV_Probable <- filter(SPARK_inheritedCNV_Probable, Genes %in% (GenePanelList$CenterForHumanGeneticslnc))
+
+Centogene_SPARK_inheritedCNV_Probable <- filter(SPARK_inheritedCNV_Probable, Genes %in% (GenePanelList$Centogene))
+
+CentogeneID_SPARK_inheritedCNV_Probable <- filter(SPARK_inheritedCNV_Probable, Genes %in% (GenePanelList$CentogeneID))
+
+EGLGenetics_SPARK_inheritedCNV_Probable <- filter(SPARK_inheritedCNV_Probable, Genes %in% (GenePanelList$EGLGenetics))
+
+FulgentGenetics_SPARK_inheritedCNV_Probable <- filter(SPARK_inheritedCNV_Probable, Genes %in% (GenePanelList$FulgentGenetics))
+
+GeneDx_SPARK_inheritedCNV_Probable <- filter(SPARK_inheritedCNV_Probable, Genes %in% (GenePanelList$GeneDx))
+
+GENETAQ_SPARK_inheritedCNV_Probable <- filter(SPARK_inheritedCNV_Probable, Genes %in% (GenePanelList$GENETAQ))
+
+GenomicsEngland_SPARK_inheritedCNV_Probable <- filter(SPARK_inheritedCNV_Probable, Genes %in% (GenePanelList$GenomicsEngland))
+
+GreenwoodGeneticCentreDiagnosticLaboratories_SPARK_inheritedCNV_Probable <- filter(SPARK_inheritedCNV_Probable, Genes %in% (GenePanelList$GreenwoodGeneticCentreDiagnosticLaboratories))
+
+GxSciences_SPARK_inheritedCNV_Probable <- filter(SPARK_inheritedCNV_Probable, Genes %in% (GenePanelList$GxSciences))
+
+MunroeMeyerInstitute_SPARK_inheritedCNV_Probable <- filter(SPARK_inheritedCNV_Probable, Genes %in% (GenePanelList$MunroeMeyerInstitute))
+
+PreventionGenetics_SPARK_inheritedCNV_Probable <- filter(SPARK_inheritedCNV_Probable, Genes %in% (GenePanelList$PreventionGenetics))
+
+ReferenceLaboratoryGenetics_SPARK_inheritedCNV_Probable <- filter(SPARK_inheritedCNV_Probable, Genes %in% (GenePanelList$ReferenceLaboratoryGenetics))
+
+Sema4_SPARK_inheritedCNV_Probable <- filter(SPARK_inheritedCNV_Probable, Genes %in% (GenePanelList$Sema4))
+
+MNGLaboratories_SPARK_inheritedCNV_Probable <- filter(SPARK_inheritedCNV_Probable, Genes %in% (GenePanelList$MNGLaboratories))
+
+## Merge each variant type and account for individuals with >1 variant
+
+AmbryGenetics_SPARK_AllSNV_Probable <- full_join(AmbryGenetics_SPARK_denovoSNVIndel_Probable, AmbryGenetics_SPARK_inheritedSNVIndel_Probable, by=c("SPID"))
+AmbryGenetics_SPARK_AllCNV_Probable <- full_join(AmbryGenetics_SPARK_denovoCNV_Probable, AmbryGenetics_SPARK_inheritedCNV_Probable, by=c("SPID"))
+AmbryGenetics_SPARK_All_Probable <- full_join(AmbryGenetics_SPARK_AllSNV_Probable, AmbryGenetics_SPARK_AllCNV_Probable, by=c("SPID"))
+AmbryGenetics_SPARK_IndividualCount_Probable <- distinct(AmbryGenetics_SPARK_All_Probable, SPID, .keep_all = TRUE)
+nrow(AmbryGenetics_SPARK_IndividualCount_Probable)/ 459*100 
+
+AsperNeurogenetics_SPARK_AllSNV_Probable <- full_join(AsperNeurogenetics_SPARK_denovoSNVIndel_Probable, AsperNeurogenetics_SPARK_inheritedSNVIndel_Probable, by=c("SPID"))
+AsperNeurogenetics_SPARK_AllCNV_Probable <- full_join(AsperNeurogenetics_SPARK_denovoCNV_Probable, AsperNeurogenetics_SPARK_inheritedCNV_Probable, by=c("SPID"))
+AsperNeurogenetics_SPARK_All_Probable <- full_join(AsperNeurogenetics_SPARK_AllSNV_Probable, AsperNeurogenetics_SPARK_AllCNV_Probable, by=c("SPID"))
+AsperNeurogenetics_SPARK_IndividualCount_Probable <- distinct(AsperNeurogenetics_SPARK_All_Probable, SPID, .keep_all = TRUE)
+nrow(AsperNeurogenetics_SPARK_IndividualCount_Probable)/ 459*100
+
+Blueprintgenetics_SPARK_AllSNV_Probable <- full_join(Blueprintgenetics_SPARK_denovoSNVIndel_Probable, Blueprintgenetics_SPARK_inheritedSNVIndel_Probable, by=c("SPID"))
+Blueprintgenetics_SPARK_AllCNV_Probable <- full_join(Blueprintgenetics_SPARK_denovoCNV_Probable, Blueprintgenetics_SPARK_inheritedCNV_Probable, by=c("SPID"))
+Blueprintgenetics_SPARK_All_Probable <- full_join(Blueprintgenetics_SPARK_AllSNV_Probable, Blueprintgenetics_SPARK_AllCNV_Probable, by=c("SPID"))
+Blueprintgenetics_SPARK_IndividualCount_Probable <- distinct(Blueprintgenetics_SPARK_All_Probable, SPID, .keep_all = TRUE)
+nrow(Blueprintgenetics_SPARK_IndividualCount_Probable)/ 459*100
+
+CenterForHumanGeneticslnc_SPARK_AllSNV_Probable <- full_join(CenterForHumanGeneticslnc_SPARK_denovoSNVIndel_Probable, CenterForHumanGeneticslnc_SPARK_inheritedSNVIndel_Probable, by=c("SPID"))
+CenterForHumanGeneticslnc_SPARK_AllCNV_Probable <- full_join(CenterForHumanGeneticslnc_SPARK_denovoCNV_Probable, CenterForHumanGeneticslnc_SPARK_inheritedCNV_Probable, by=c("SPID"))
+CenterForHumanGeneticslnc_SPARK_All_Probable <- full_join(CenterForHumanGeneticslnc_SPARK_AllSNV_Probable, CenterForHumanGeneticslnc_SPARK_AllCNV_Probable, by=c("SPID"))
+CenterForHumanGeneticslnc_SPARK_IndividualCount_Probable <- distinct(CenterForHumanGeneticslnc_SPARK_All_Probable, SPID, .keep_all = TRUE)
+nrow(CenterForHumanGeneticslnc_SPARK_IndividualCount_Probable)/ 459*100
+
+Centogene_SPARK_AllSNV_Probable <- full_join(Centogene_SPARK_denovoSNVIndel_Probable, Centogene_SPARK_SPARK_inheritedSNVIndel_Probable, by=c("SPID"))
+Centogene_SPARK_AllCNV_Probable <- full_join(Centogene_SPARK_denovoCNV_Probable, Centogene_SPARK_inheritedCNV_Probable, by=c("SPID"))
+Centogene_SPARK_All_Probable <- full_join(Centogene_SPARK_AllSNV_Probable, Centogene_SPARK_AllCNV_Probable, by=c("SPID"))
+Centogene_SPARK_IndividualCount_Probable <- distinct(Centogene_SPARK_All_Probable, SPID, .keep_all = TRUE)
+nrow(Centogene_SPARK_IndividualCount_Probable)/ 459*100
+
+CentogeneID_SPARK_AllSNV_Probable <- full_join(CentogeneID_SPARK_denovoSNVIndel_Probable, CentogeneID_SPARK_inheritedSNVIndel_Probable, by=c("SPID"))
+CentogeneID_SPARK_AllCNV_Probable <- full_join(CentogeneID_SPARK_denovoCNV_Probable, CentogeneID_SPARK_inheritedCNV_Probable, by=c("SPID"))
+CentogeneID_SPARK_All_Probable <- full_join(CentogeneID_SPARK_AllSNV_Probable, CentogeneID_SPARK_AllCNV_Probable, by=c("SPID"))
+CentogeneID_SPARK_IndividualCount_Probable <- distinct(CentogeneID_SPARK_All_Probable, SPID, .keep_all = TRUE)
+nrow(CentogeneID_SPARK_IndividualCount_Probable)/ 459*100
+
+EGLGenetics_SPARK_AllSNV_Probable <- full_join(EGLGenetics_SPARK_denovoSNVIndel_Probable, EGLGenetics_SPARK_inheritedSNVIndel_Probable, by=c("SPID"))
+EGLGenetics_SPARK_AllCNV_Probable <- full_join(EGLGenetics_SPARK_denovoCNV_Probable, EGLGenetics_SPARK_inheritedCNV_Probable, by=c("SPID"))
+EGLGenetics_SPARK_All_Probable <- full_join(EGLGenetics_SPARK_AllSNV_Probable, EGLGenetics_SPARK_AllCNV_Probable, by=c("SPID"))
+EGLGenetics_SPARK_IndividualCount_Probable <- distinct(EGLGenetics_SPARK_All_Probable, SPID, .keep_all = TRUE)
+nrow(EGLGenetics_SPARK_IndividualCount_Probable)/ 459*100
+
+FulgentGenetics_SPARK_AllSNV_Probable <- full_join(FulgentGenetics_SPARK_denovoSNVIndel_Probable, FulgentGenetics_SPARK_inheritedSNVIndel_Probable, by=c("SPID"))
+FulgentGenetics_SPARK_AllCNV_Probable <- full_join(FulgentGenetics_SPARK_denovoCNV_Probable, FulgentGenetics_SPARK_inheritedCNV_Probable, by=c("SPID"))
+FulgentGenetics_SPARK_All_Probable <- full_join(FulgentGenetics_SPARK_AllSNV_Probable, FulgentGenetics_SPARK_AllCNV_Probable, by=c("SPID"))
+FulgentGenetics_SPARK_IndividualCount_Probable <- distinct(FulgentGenetics_SPARK_All_Probable, SPID, .keep_all = TRUE)
+nrow(FulgentGenetics_SPARK_IndividualCount_Probable)/ 459*100
+
+GeneDx_SPARK_AllSNV_Probable <- full_join(GeneDx_SPARK_denovoSNVIndel_Probable, GeneDx_SPARK_inheritedSNVIndel_Probable, by=c("SPID"))
+GeneDx_SPARK_AllCNV_Probable <- full_join(GeneDx_SPARK_denovoCNV_Probable, GeneDx_SPARK_inheritedCNV_Probable, by=c("SPID"))
+GeneDx_SPARK_All_Probable <- full_join(GeneDx_SPARK_AllSNV_Probable, GeneDx_SPARK_AllCNV_Probable, by=c("SPID"))
+GeneDx_SPARK_IndividualCount_Probable <- distinct(GeneDx_SPARK_All_Probable, SPID, .keep_all = TRUE)
+nrow(GeneDx_SPARK_IndividualCount_Probable)/ 459*100
+
+GENETAQ_SPARK_AllSNV_Probable <- full_join(GENETAQ_SPARK_denovoSNVIndel_Probable, GENETAQ_SPARK_inheritedSNVIndel_Probable, by=c("SPID"))
+GENETAQ_SPARK_AllCNV_Probable <- full_join(GENETAQ_SPARK_denovoCNV_Probable, GENETAQ_SPARK_inheritedCNV_Probable, by=c("SPID"))
+GENETAQ_SPARK_All_Probable <- full_join(GENETAQ_SPARK_AllSNV_Probable, GENETAQ_SPARK_AllCNV_Probable, by=c("SPID"))
+GENETAQ_SPARK_IndividualCount_Probable <- distinct(GENETAQ_SPARK_All_Probable, SPID, .keep_all = TRUE)
+nrow(GENETAQ_SPARK_IndividualCount_Probable)/ 459*100
+
+GenomicsEngland_SPARK_AllSNV_Probable <- full_join(GenomicsEngland_SPARK_denovoSNVIndel_Probable, GenomicsEngland_inheritedSNVIndel_Probable, by=c("SPID"))
+GenomicsEngland_SPARK_AllCNV_Probable <- full_join(GenomicsEngland_SPARK_denovoCNV_Probable, GenomicsEngland_SPARK_inheritedCNV_Probable, by=c("SPID"))
+GenomicsEngland_SPARK_All_Probable <- full_join(GenomicsEngland_SPARK_AllSNV_Probable, GenomicsEngland_SPARK_AllCNV_Probable, by=c("SPID"))
+GenomicsEngland_SPARK_IndividualCount_Probable <- distinct(GenomicsEngland_SPARK_All_Probable, SPID, .keep_all = TRUE)
+nrow(GenomicsEngland_SPARK_IndividualCount_Probable)/ 459*100
+
+GreenwoodGeneticCentreDiagnosticLaboratories_SPARK_AllSNV_Probable <- full_join(GreenwoodGeneticCentreDiagnosticLaboratories_SPARK_denovoSNVIndel_Probable, GreenwoodGeneticCentreDiagnosticLaboratories_SPARK_inheritedSNVIndel_Probable, by=c("SPID"))
+GreenwoodGeneticCentreDiagnosticLaboratories_SPARK_AllCNV_Probable <- full_join(GreenwoodGeneticCentreDiagnosticLaboratories_SPARK_denovoCNV_Probable, GreenwoodGeneticCentreDiagnosticLaboratories_SPARK_inheritedCNV_Probable, by=c("SPID"))
+GreenwoodGeneticCentreDiagnosticLaboratories_SPARK_All_Probable <- full_join(GreenwoodGeneticCentreDiagnosticLaboratories_SPARK_AllSNV_Probable, GreenwoodGeneticCentreDiagnosticLaboratories_SPARK_AllCNV_Probable, by=c("SPID"))
+GreenwoodGeneticCentreDiagnosticLaboratories_SPARK_IndividualCount_Probable <- distinct(GreenwoodGeneticCentreDiagnosticLaboratories_SPARK_All_Probable, SPID, .keep_all = TRUE)
+nrow(GreenwoodGeneticCentreDiagnosticLaboratories_SPARK_IndividualCount_Probable)/ 459*100
+
+GxSciences_SPARK_AllSNV_Probable <- full_join(GxSciences_SPARK_denovoSNVIndel_Probable, GxSciences_SPARK_SPARK_inheritedSNVIndel_Probable, by=c("SPID"))
+GxSciences_SPARK_AllCNV_Probable <- full_join(GxSciences_SPARK_denovoCNV_Probable, GxSciences_SPARK_inheritedCNV_Probable, by=c("SPID"))
+GxSciences_SPARK_All_Probable <- full_join(GxSciences_SPARK_AllSNV_Probable, GxSciences_SPARK_AllCNV_Probable, by=c("SPID"))
+GxSciences_SPARK_IndividualCount_Probable <- distinct(GxSciences_SPARK_All_Probable, SPID, .keep_all = TRUE)
+nrow(GxSciences_SPARK_IndividualCount_Probable)/ 459*100
+
+MunroeMeyerInstitute_SPARK_AllSNV_Probable <- full_join(MunroeMeyerInstitute_SPARK_denovoSNVIndel_Probable, MunroeMeyerInstitute_SPARK_inheritedSNVIndel_Probable, by=c("SPID"))
+MunroeMeyerInstitute_SPARK_AllCNV_Probable <- full_join(MunroeMeyerInstitute_SPARK_denovoCNV_Probable, MunroeMeyerInstitute_SPARK_inheritedCNV_Probable, by=c("SPID"))
+MunroeMeyerInstitute_SPARK_All_Probable <- full_join(MunroeMeyerInstitute_SPARK_AllSNV_Probable, MunroeMeyerInstitute_SPARK_AllCNV_Probable, by=c("SPID"))
+MunroeMeyerInstitute_SPARK_IndividualCount_Probable <- distinct(MunroeMeyerInstitute_SPARK_All_Probable, SPID, .keep_all = TRUE)
+nrow(MunroeMeyerInstitute_SPARK_IndividualCount_Probable)/ 459*100
+
+PreventionGenetics_SPARK_AllSNV_Probable <- full_join(PreventionGenetics_SPARK_denovoSNVIndel_Probable, PreventionGenetics_SPARK_inheritedSNVIndel_Probable, by=c("SPID"))
+PreventionGenetics_SPARK_AllCNV_Probable <- full_join(PreventionGenetics_SPARK_denovoCNV_Probable, PreventionGenetics_SPARK_inheritedCNV_Probable, by=c("SPID"))
+PreventionGenetics_SPARK_All_Probable <- full_join(PreventionGenetics_SPARK_AllSNV_Probable, PreventionGenetics_SPARK_AllCNV_Probable, by=c("SPID"))
+PreventionGenetics_SPARK_IndividualCount_Probable <- distinct(PreventionGenetics_SPARK_All_Probable, SPID, .keep_all = TRUE)
+nrow(PreventionGenetics_SPARK_IndividualCount_Probable)/ 459*100
+
+ReferenceLaboratoryGenetics_SPARK_AllSNV_Probable <- full_join(ReferenceLaboratoryGenetics_SPARK_denovoSNVIndel_Probable, ReferenceLaboratoryGenetics_SPARK_inheritedSNVIndel_Probable, by=c("SPID"))
+ReferenceLaboratoryGenetics_SPARK_AllCNV_Probable <- full_join(ReferenceLaboratoryGenetics_SPARK_denovoCNV_Probable, ReferenceLaboratoryGenetics_SPARK_inheritedCNV_Probable, by=c("SPID"))
+ReferenceLaboratoryGenetics_SPARK_All_Probable <- full_join(ReferenceLaboratoryGenetics_SPARK_AllSNV_Probable, ReferenceLaboratoryGenetics_SPARK_AllCNV_Probable, by=c("SPID"))
+ReferenceLaboratoryGenetics_SPARK_IndividualCount_Probable <- distinct(ReferenceLaboratoryGenetics_SPARK_All_Probable, SPID, .keep_all = TRUE)
+nrow(ReferenceLaboratoryGenetics_SPARK_IndividualCount_Probable)/ 459*100
+
+Sema4_SPARK_AllSNV_Probable <- full_join(Sema4_SPARK_denovoSNVIndel_Probable, Sema4_SPARK_inheritedSNVIndel_Probable, by=c("SPID"))
+Sema4_SPARK_AllCNV_Probable <- full_join(Sema4_SPARK_denovoCNV_Probable, Sema4_SPARK_inheritedCNV_Probable, by=c("SPID"))
+Sema4_SPARK_All_Probable <- full_join(Sema4_SPARK_AllSNV_Probable, Sema4_SPARK_AllCNV_Probable, by=c("SPID"))
+Sema4_SPARK_IndividualCount_Probable <- distinct(Sema4_SPARK_All_Probable, SPID, .keep_all = TRUE)
+nrow(Sema4_SPARK_IndividualCount_Probable)/ 459*100
+
+MNGLaboratories_SPARK_AllSNV_Probable <- full_join(MNGLaboratories_SPARK_denovoSNVIndel_Probable, MNGLaboratories_SPARK_inheritedSNVIndel_Probable, by=c("SPID"))
+MNGLaboratories_SPARK_AllCNV_Probable <- full_join(MNGLaboratories_SPARK_denovoCNV_Probable, MNGLaboratories_SPARK_inheritedCNV_Probable, by=c("SPID"))
+MNGLaboratories_SPARK_All_Probable <- full_join(MNGLaboratories_SPARK_AllSNV_Probable, MNGLaboratories_SPARK_AllCNV_Probable, by=c("SPID"))
+MNGLaboratories_SPARK_IndividualCount_Probable <- distinct(MNGLaboratories_SPARK_All_Probable, SPID, .keep_all = TRUE)
+nrow(MNGLaboratories_SPARK_IndividualCount_Probable)/ 459*100
